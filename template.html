@@ -1,0 +1,414 @@
+<meta charset="utf-8">
+<title>{{TITLE}}</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: ein Schnittplatz – Bühne (16:9) oben, Transport + Timeline darunter, Drehfassung als Liste. Bewusst dunkel wie ein Editor. */
+:root{
+  --bg:#0A101C; --panel:#111A2C; --panel2:#17223A; --line:#26324D; --fg:#E7EBF3; --muted:#8D96B0;
+  --navy:#0F2D5C; --blue:#1B4594; --sky:#9DB2D6; --red:#C8102E; --gold:#D4A017; --white:#FFFFFF;
+  --ui:"Inter",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --cd:Arial,"Helvetica Neue",Helvetica,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--ui);font-size:14px;line-height:1.45}
+.wrap{max-width:1240px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px}
+h1{font-size:18px;font-weight:700;margin:0;letter-spacing:.01em;text-wrap:balance}
+.sub{color:var(--muted);font-size:13px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ---------- Bühne ---------- */
+.stage{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;background:#000;border-radius:6px;overflow:hidden;container-type:inline-size;box-shadow:0 0 0 1px var(--line)}
+.lay-slide{position:absolute;inset:0;display:flex}
+.slidebox{flex:0 0 68.87%;height:100%;background:var(--white);display:flex;align-items:center;justify-content:center}
+.slidebox img{width:100%;height:100%;object-fit:contain;display:block}
+.speaker{flex:1 1 auto;position:relative;background:radial-gradient(120% 80% at 50% 30%,#2A3A5E 0%,#141E33 55%,#0B1220 100%);overflow:hidden}
+.speaker svg{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:92%;height:auto}
+.nametag{position:absolute;left:6%;top:5%;right:6%;display:flex;flex-direction:column;gap:.2cqw}
+.nametag b{font-family:var(--cd);font-size:1.45cqw;color:var(--white)}
+.nametag span{font-family:var(--cd);font-size:1.05cqw;color:var(--sky)}
+.camtag{position:absolute;right:5%;top:5%;font:600 .9cqw var(--mono);color:var(--muted);letter-spacing:.08em}
+.camtag i{display:inline-block;width:.8cqw;height:.8cqw;border-radius:50%;background:var(--red);margin-right:.5cqw;vertical-align:middle;opacity:.35}
+.speaking .camtag i{opacity:1}
+.bars{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);display:flex;gap:.45cqw;align-items:flex-end;height:2.4cqw}
+.bars i{width:.55cqw;background:var(--sky);border-radius:.3cqw;height:20%;opacity:.5}
+.speaking .bars i{animation:lv .9s ease-in-out infinite;opacity:1}
+.bars i:nth-child(2){animation-delay:-.3s}.bars i:nth-child(3){animation-delay:-.6s}.bars i:nth-child(4){animation-delay:-.15s}.bars i:nth-child(5){animation-delay:-.45s}
+@keyframes lv{0%,100%{height:20%}50%{height:100%}}
+
+.lay-oton{position:absolute;inset:0;background:#000}
+.lay-oton .still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.95)}
+.lay-oton .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 30%,rgba(0,0,0,.15) 55%,rgba(0,0,0,.85) 100%)}
+.oton-tag{position:absolute;left:3.2%;top:4.5%;font:700 1.15cqw var(--cd);letter-spacing:.12em;color:var(--white);background:var(--red);padding:.35cqw .8cqw}
+.oton-tc{position:absolute;right:3.2%;top:4.5%;font:600 1.05cqw var(--mono);color:var(--white);background:rgba(0,0,0,.55);padding:.35cqw .7cqw}
+.lower{position:absolute;left:3.2%;bottom:17%;display:flex;flex-direction:column;gap:.2cqw;max-width:70%}
+.lower b{font:700 1.7cqw var(--cd);color:var(--white);background:var(--navy);padding:.4cqw .9cqw;align-self:flex-start}
+.lower span{font:400 1.2cqw var(--cd);color:var(--navy);background:var(--white);padding:.3cqw .9cqw;align-self:flex-start}
+.oton-prog{position:absolute;left:0;right:0;bottom:0;height:.45cqw;background:rgba(255,255,255,.15)}
+.oton-prog i{display:block;height:100%;width:0;background:var(--red)}
+.oton-link{position:absolute;right:3.2%;bottom:17%;font:500 1cqw var(--ui);color:var(--white);background:rgba(0,0,0,.55);padding:.4cqw .8cqw;border-radius:.3cqw;text-decoration:none}
+.oton-link:hover{text-decoration:underline}
+.ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:600 1.4cqw var(--mono);color:var(--muted)}
+
+.caption{position:absolute;left:50%;bottom:3.2%;transform:translateX(-50%);width:max-content;max-width:86%;text-align:center;font:600 1.75cqw/1.3 var(--cd);color:var(--white);background:rgba(8,12,22,.82);padding:.45cqw 1cqw;border-radius:.25cqw;text-wrap:balance}
+.caption:empty{display:none}
+.mode-slide .caption{left:34.4%;max-width:64%}
+
+.chapter{position:absolute;left:1.6%;top:2.6%;font:600 .95cqw var(--mono);color:var(--navy);background:rgba(255,255,255,.92);padding:.25cqw .6cqw;border-radius:.2cqw;letter-spacing:.04em}
+
+/* ---------- Transport ---------- */
+.transport{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.btns{display:flex;gap:6px}
+button,select{font:500 13px var(--ui);color:var(--fg);background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:7px 11px;cursor:pointer}
+button:hover,select:hover{border-color:var(--sky)}
+button:focus-visible,select:focus-visible,textarea:focus-visible,.seg:focus-visible,.row:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+button.primary{background:var(--blue);border-color:var(--blue);color:var(--white);min-width:96px;font-weight:600}
+.time{font-size:13px;color:var(--fg)}
+.time small{color:var(--muted)}
+.spacer{flex:1 1 auto}
+label.opt{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:13px}
+.note{font-size:12px;color:var(--muted)}
+
+.timeline{display:flex;height:34px;border-radius:5px;overflow:hidden;border:1px solid var(--line);background:var(--panel)}
+.seg{position:relative;min-width:3px;border-right:1px solid var(--bg);cursor:pointer;display:flex;align-items:flex-end;overflow:hidden}
+.seg.slide{background:#1C3566}.seg.oton{background:#7C1023}
+.seg:hover{filter:brightness(1.3)}
+.seg.cur{box-shadow:inset 0 0 0 2px var(--gold)}
+.seg span{font:600 10px var(--mono);color:rgba(255,255,255,.75);padding:0 3px 2px;white-space:nowrap}
+.seg .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(255,255,255,.18);pointer-events:none}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+
+/* ---------- Drehfassung ---------- */
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;min-width:0}
+.panel h2{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;padding:12px 14px;border-bottom:1px solid var(--line)}
+.list{max-height:520px;overflow:auto}
+.chap{font:600 11px var(--mono);letter-spacing:.06em;color:var(--gold);padding:12px 14px 4px;text-transform:uppercase}
+.row{display:grid;grid-template-columns:72px minmax(0,1fr) 48px;gap:10px;padding:8px 14px;border-left:3px solid transparent;cursor:pointer}
+.row:hover{background:var(--panel2)}
+.row.cur{background:var(--panel2);border-left-color:var(--gold)}
+.pill{font:600 10px var(--mono);letter-spacing:.06em;padding:3px 6px;border-radius:3px;align-self:start;text-align:center}
+.pill.slide{background:#1C3566;color:var(--sky)}.pill.oton{background:#5B0C1A;color:#FFC9D1}
+.row p{margin:0;font-size:13px;color:var(--fg)}
+.row p em{font-style:normal;color:var(--muted)}
+.row .dur{font:12px var(--mono);color:var(--muted);text-align:right}
+.side{display:grid;gap:12px;padding:14px}
+.side dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:0;font-size:13px}
+.side dt{color:var(--muted)}.side dd{margin:0;text-align:right}
+textarea{width:100%;min-height:220px;box-sizing:border-box;resize:vertical;font:12px/1.45 var(--mono);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:10px}
+.msg{font-size:12px;color:var(--sky);min-height:1em}
+details summary{cursor:pointer;color:var(--fg);font-weight:600;font-size:13px}
+@media (prefers-reduced-motion:reduce){.speaking .bars i{animation:none;height:70%}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>{{H1}}</h1>
+    <div class="sub">Folie links · Sprecher rechts · O-Töne im Vollbild</div>
+  </header>
+
+  <div class="stage mode-slide" id="stage" aria-live="polite">
+    <div class="lay-slide" id="laySlide">
+      <div class="slidebox"><img id="slideImg" alt="Folie"></div>
+      <div class="speaker" id="speaker">
+        <svg viewBox="0 0 200 260" aria-hidden="true">
+          <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3B4C72"/><stop offset="1" stop-color="#1E2A44"/></linearGradient></defs>
+          <path d="M18 260 C22 205 52 182 100 182 C148 182 178 205 182 260 Z" fill="url(#g)"/>
+          <rect x="86" y="150" width="28" height="38" rx="8" fill="#33446A"/>
+          <ellipse cx="100" cy="112" rx="40" ry="48" fill="#3B4C72"/>
+          <path d="M82 182 L100 214 L118 182" fill="none" stroke="#9DB2D6" stroke-width="3" opacity=".5"/>
+        </svg>
+        <div class="nametag"><b>{{SPEAKER}}</b><span>{{CHANNEL}}</span></div>
+        <div class="camtag"><i></i>CAM A</div>
+        <div class="bars"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="chapter" id="chapter"></div>
+    </div>
+    <div class="lay-oton" id="layOton" hidden>
+      <div class="ph" id="otonPh">Standbild fehlt</div>
+      <img class="still" id="otonImg" alt="">
+      <video class="still" id="otonVid" playsinline preload="auto"></video>
+      <div class="shade"></div>
+      <div class="oton-tag" id="otonTag">O-TON</div>
+      <div class="oton-tc mono" id="otonTc"></div>
+      <div class="lower"><b id="otonWho"></b><span id="otonSrc"></span></div>
+      <a class="oton-link" id="otonLink" target="_blank" rel="noopener">Original auf YouTube ↗</a>
+      <div class="oton-prog"><i id="otonProg"></i></div>
+    </div>
+    <div class="caption" id="caption"></div>
+  </div>
+
+  <div class="transport">
+    <div class="btns">
+      <button id="bPrev" title="Vorheriger Abschnitt (←)">◀︎ Zurück</button>
+      <button id="bPlay" class="primary" title="Abspielen / Pause (Leertaste)">▶︎ Abspielen</button>
+      <button id="bNext" title="Nächster Abschnitt (→)">Weiter ▶︎</button>
+    </div>
+    <div class="time mono" id="time">00:00 <small>/ ~00:00</small></div>
+    <div class="spacer"></div>
+    <label class="opt" for="rate">Tempo
+      <select id="rate"><option value="0.9">0,9×</option><option value="1" selected>1,0×</option><option value="1.1">1,1×</option><option value="1.25">1,25×</option><option value="1.5">1,5×</option></select>
+    </label>
+    <span class="opt">Stimme: Piper · Thorsten (de, high)</span>
+    <label class="opt" for="subs"><input type="checkbox" id="subs" checked> Untertitel</label>
+  </div>
+
+  <div class="timeline" id="timeline" aria-label="Timeline"></div>
+  <div class="legend"><span><i style="background:#1C3566"></i>Folie + Sprecher</span><span><i style="background:#7C1023"></i>O-Ton Vollbild</span><span class="note">O-Töne nach Schnittmarken, Sprechtext nach Piper-Aufnahme.</span></div>
+
+  <div class="cols">
+    <div class="panel"><h2>Drehfassung</h2><div class="list" id="list"></div></div>
+    <div class="panel">
+      <h2>Übersicht</h2>
+      <div class="side">
+        <dl id="stats"></dl>
+        <p class="note">O-Töne: Originalclips (720p, Ton) nach den Schnittmarken. Sprecher: synthetisiert mit Piper (Open Source, MIT), Satz für Satz vorberechnet. Neue Sätze aus einer eingefügten Drehfassung liest ersatzweise die Browser-Stimme.</p>
+        <details>
+          <summary>Drehfassung aktualisieren</summary>
+          <p class="note">Tab «Drehfassung» im Teleprompter-Doc kopieren und hier einfügen. Erkannt werden Zeilen mit «▶ EINBLENDEN Nr · …», «■ O-TON … · m:ss,s–m:ss,s · …», «## Kapitel» und der Sprechtext dazwischen.</p>
+          <textarea id="src" spellcheck="false"></textarea>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:8px"><button id="bApply">Übernehmen</button><span class="msg" id="msg"></span></div>
+        </details>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/plain" id="drehfassung">{{DREHFASSUNG}}</script>
+
+<script>
+const AUDIO = {{AUDIO}};
+const CLIPS = {{CLIPS}};
+const LINKS = {{LINKS}};
+</script>
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const NSLIDES = {{NSLIDES}};
+const slideSrc = n => `{{SLIDE_DIR}}/s-${String(n).padStart(2,'0')}.jpg`;
+const WPS = 2.5; // 150 Wörter/Min.
+
+/* ---------- Parser: Drehfassung → Segmente ---------- */
+function toSec(m, s, d){ return (+m)*60 + (+s) + (d ? (+d)/10 : 0); }
+function parse(text){
+  const segs = []; let slide = 1, slideLabel = 'Titel', chapter = '', lastType = null;
+  const lines = text.replace(/\r/g,'').split('\n').map(l => l.replace(/\*\*/g,'').trim());
+  for (const raw of lines){
+    const l = raw.replace(/^[-•]\s+/, '');
+    if (!l || /^#\s/.test(l) || /^Sprechtext rund/i.test(l)) continue;
+    let m;
+    if ((m = l.match(/^##\s*(.+)$/))){ chapter = m[1].trim(); if (/^geparkt/i.test(chapter)) break; continue; }
+    if ((m = l.match(/^▶?\s*EINBLENDEN[:\s]+(?:Slide\s*)?(\d+)\s*[·\-–:]?\s*(.*)$/i))){
+      slide = Math.min(Math.max(+m[1],1),NSLIDES); slideLabel = m[2].trim() || ('Folie ' + slide); lastType = 'cue'; continue;
+    }
+    if ((m = l.match(/^■?\s*O-TON\s*(.*)$/i))){
+      const rest = m[1];
+      const who = rest.split('·')[0].replace(/^[:\s]+/,'').trim();
+      const quote = (rest.match(/«[^»]*»(?:\s*\/\s*«[^»]*»)?/) || [''])[0];
+      const re = /(\d+):(\d{2})(?:[,.](\d))?\s*[–-]\s*(\d+):(\d{2})(?:[,.](\d))?/g; let t, found = false;
+      while ((t = re.exec(rest))){
+        found = true;
+        const a = toSec(t[1],t[2],t[3]), b = toSec(t[4],t[5],t[6]);
+        const clip = (window.CLIPS_ || []).map(c => [c, Math.abs(c.a - a) + Math.abs(c.b - b)]).filter(x => x[1] < 2).sort((x,y) => x[1] - y[1]).map(x => x[0])[0] || null;
+        segs.push({type:'oton', chapter, slide, who: clip ? clip.who : who, label: who, a, b, clip,
+          text: clip ? clip.text : quote.replace(/[«»]/g,''), dur: Math.max(1, b - a)});
+      }
+      if (!found) segs.push({type:'oton', chapter, slide, who, label: who, a:0, b:8, clip:null, text: quote.replace(/[«»]/g,''), dur: 8});
+      lastType = 'oton'; continue;
+    }
+    // Sprechtext
+    const prev = segs[segs.length-1];
+    if (prev && prev.type === 'slide' && lastType === 'text' && prev.slide === slide) {
+      prev.text += ' ' + l;
+    } else {
+      segs.push({type:'slide', chapter, slide, label: slideLabel, text: l});
+    }
+    lastType = 'text';
+  }
+  segs.forEach(s => { if (s.type === 'slide') s.dur = Math.max(2, s.text.split(/\s+/).length / WPS); });
+  return segs;
+}
+
+/* ---------- Zustand ---------- */
+window.CLIPS_ = typeof CLIPS !== 'undefined' ? CLIPS : [];
+let SEGS = [], cur = 0, playing = false, token = 0, segStart = 0, rafId = 0;
+const rate = () => +$('rate').value;
+const fmt = s => { s = Math.max(0, Math.round(s)); return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0'); };
+function sentences(t){ return (t.match(/[^.!?]+[.!?]+[»"]?\s*|[^.!?]+$/g) || [t]).map(s => s.trim()).filter(Boolean); }
+function prep(segs){
+  let ot = 0;
+  segs.forEach(s => {
+    if (s.type === 'oton') s.otNo = ++ot;
+    if (s.type === 'slide'){
+      s.parts = sentences(s.text).map(t => ({t, a: (typeof AUDIO !== 'undefined' && AUDIO[t]) || null}));
+      s.dur = s.parts.reduce((d,p) => d + (p.a ? p.a.d : Math.max(1.2, p.t.split(/\s+/).length / WPS)), 0);
+      s.missing = s.parts.filter(p => !p.a).length;
+    }
+  });
+  return segs;
+}
+const segDur = s => s.type === 'slide' ? s.dur / rate() : s.dur;
+const totalDur = () => SEGS.reduce((t,s) => t + segDur(s), 0);
+const offsetOf = i => SEGS.slice(0,i).reduce((t,s) => t + segDur(s), 0);
+const clipSrc = c => `clips/${c.vid}_${Math.floor(c.a)}.mp4`;
+
+/* Ersatzstimme nur für Sätze ohne Piper-Aufnahme */
+const synth = window.speechSynthesis || null;
+function fallbackVoice(){ if (!synth) return null; const v = synth.getVoices().filter(v => /^de/i.test(v.lang)); return v.find(x => /de-CH/i.test(x.lang)) || v[0] || null; }
+const speakable = t => t.replace(/(\d)'(\d{3})/g,'$1$2').replace(/[«»…]/g,'');
+const narr = new Audio(); narr.preload = 'auto';
+
+/* ---------- Darstellung ---------- */
+function showSeg(i){
+  const s = SEGS[i]; if (!s) return;
+  $('stage').classList.toggle('mode-slide', s.type === 'slide');
+  $('laySlide').hidden = s.type !== 'slide';
+  $('layOton').hidden = s.type !== 'oton';
+  const v = $('otonVid');
+  if (s.type === 'slide'){
+    v.pause();
+    $('slideImg').src = slideSrc(s.slide); $('slideImg').alt = `Folie ${s.slide}: ${s.label}`;
+    $('chapter').textContent = `FOLIE ${s.slide} · ${s.label}`;
+    setCaption(s.parts[0] ? s.parts[0].t : '');
+  } else {
+    const c = s.clip;
+    $('otonImg').hidden = !(c && c.still); if (c && c.still) $('otonImg').src = c.still;
+    $('otonPh').hidden = !!c;
+    if (c){ v.hidden = false; if (!v.src.endsWith(clipSrc(c))) { v.src = clipSrc(c); v.poster = c.still || ''; } v.currentTime = 0; }
+    else { v.hidden = true; v.removeAttribute('src'); }
+    const [who, src] = (s.who || '').split('·').map(x => x.trim());
+    $('otonWho').textContent = who || 'O-Ton'; $('otonSrc').textContent = src || '';
+    const tc = t => { const m = Math.floor(t/60), sec = (t - m*60); return `${m}:${sec.toFixed(1).padStart(4,'0').replace('.',',')}`; };
+    $('otonTc').textContent = `${tc(s.a)}–${tc(s.b)} · ${s.dur.toFixed(1).replace('.',',')} s`;
+    if (c){ $('otonLink').href = LINKS[c.vid] ? LINKS[c.vid] : `https://www.youtube.com/watch?v=${encodeURIComponent(c.vid)}&t=${Math.floor(c.a)}s`; $('otonLink').textContent = LINKS[c.vid] ? 'Quelle ↗' : 'Original auf YouTube ↗'; $('otonLink').hidden = false; } else $('otonLink').hidden = true;
+    $('otonTag').textContent = `O-TON ${s.otNo}`;
+    $('otonProg').style.width = '0%';
+    setCaption(c && c.ut ? c.ut : (s.text || ''));
+  }
+  document.querySelectorAll('.seg').forEach((el,k) => el.classList.toggle('cur', k === i));
+  document.querySelectorAll('.row').forEach(el => el.classList.toggle('cur', +el.dataset.i === i));
+  const row = document.querySelector(`.row[data-i="${i}"]`);
+  if (row){ const L = $('list'); const top = row.offsetTop - L.offsetTop; if (top < L.scrollTop || top > L.scrollTop + L.clientHeight - 60) L.scrollTop = top - 40; }
+}
+function setCaption(t){ $('caption').textContent = $('subs').checked ? t : ''; }
+function setSpeaking(on){ $('speaker').classList.toggle('speaking', on); }
+
+function buildUI(){
+  const tl = $('timeline'); tl.innerHTML = '';
+  const tot = totalDur();
+  SEGS.forEach((s,i) => {
+    const d = document.createElement('div'); d.className = 'seg ' + s.type; d.tabIndex = 0;
+    d.style.flex = `${segDur(s)/tot} 0 0`;
+    d.title = (s.type === 'slide' ? `Folie ${s.slide} · ${s.label}` : `O-Ton ${s.otNo} · ${s.label}`) + ` · ${fmt(segDur(s))}`;
+    d.innerHTML = `<div class="fill"></div><span>${s.type === 'slide' ? s.slide : 'OT' + s.otNo}</span>`;
+    d.onclick = () => jump(i); d.onkeydown = e => { if (e.key === 'Enter') jump(i); };
+    tl.appendChild(d);
+  });
+  const L = $('list'); L.innerHTML = ''; let ch = null;
+  SEGS.forEach((s,i) => {
+    if (s.chapter !== ch){ ch = s.chapter; if (ch){ const c = document.createElement('div'); c.className = 'chap'; c.textContent = ch; L.appendChild(c); } }
+    const r = document.createElement('div'); r.className = 'row'; r.dataset.i = i; r.tabIndex = 0;
+    const tag = s.type === 'slide' ? `<span class="pill slide">FOLIE ${s.slide}</span>` : `<span class="pill oton">O-TON ${s.otNo}</span>`;
+    const warn = s.type === 'slide' && s.missing ? ` <em>· ${s.missing} Satz ohne Aufnahme</em>` : (s.type === 'oton' && !s.clip ? ' <em>· Clip unbekannt</em>' : '');
+    const body = s.type === 'slide' ? `<p><em>${esc(s.label)} — </em>${esc(s.text)}${warn}</p>` : `<p><em>${esc(s.who || s.label)} — </em>«${esc(s.text)}»${warn}</p>`;
+    r.innerHTML = `${tag}${body}<span class="dur">${fmt(segDur(s))}</span>`;
+    r.onclick = () => jump(i); r.onkeydown = e => { if (e.key === 'Enter') jump(i); };
+    L.appendChild(r);
+  });
+  const nS = SEGS.filter(s => s.type === 'slide'), nO = SEGS.filter(s => s.type === 'oton');
+  const tS = nS.reduce((t,s) => t + segDur(s), 0), tO = nO.reduce((t,s) => t + s.dur, 0);
+  const words = nS.reduce((t,s) => t + s.text.split(/\s+/).length, 0);
+  const miss = nS.reduce((t,s) => t + s.missing, 0);
+  $('stats').innerHTML = `<dt>Gesamt</dt><dd class="mono">${fmt(tot)}</dd>
+    <dt>Sprecher + Folie</dt><dd class="mono">${fmt(tS)} · ${words} Wörter</dd>
+    <dt>O-Töne (${nO.length} Schnitte)</dt><dd class="mono">${fmt(tO)}</dd>
+    <dt>Folien verwendet</dt><dd class="mono">${new Set(nS.map(s => s.slide)).size} von ${NSLIDES}</dd>` +
+    (miss ? `<dt>Sätze ohne Piper-Aufnahme</dt><dd class="mono">${miss}</dd>` : '');
+  updateTime(0);
+}
+function esc(t){ return String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function updateTime(el){
+  const t = offsetOf(cur) + el;
+  $('time').innerHTML = `${fmt(t)} <small>/ ${fmt(totalDur())}</small>`;
+  const s = SEGS[cur]; const f = document.querySelectorAll('.seg .fill')[cur];
+  if (f) f.style.width = (s ? Math.min(1, el / segDur(s)) * 100 : 0) + '%';
+  if (s && s.type === 'oton') $('otonProg').style.width = (Math.min(1, el / s.dur) * 100) + '%';
+}
+
+/* ---------- Abspielen ---------- */
+function elapsed(){
+  const s = SEGS[cur]; if (!s) return 0;
+  if (s.type === 'oton' && s.clip) return $('otonVid').currentTime || 0;
+  return (performance.now() - segStart) / 1000;
+}
+function tick(){ if (!playing) return; updateTime(elapsed()); rafId = requestAnimationFrame(tick); }
+function stopAll(){ token++; narr.pause(); narr.onended = narr.onerror = null; $('otonVid').pause(); $('otonVid').onended = null; if (synth) synth.cancel(); setSpeaking(false); cancelAnimationFrame(rafId); }
+function play(){ if (playing) return; playing = true; $('bPlay').textContent = '❚❚ Pause'; runSeg(cur); }
+function pause(){ playing = false; $('bPlay').textContent = '▶︎ Abspielen'; stopAll(); }
+function jump(i){ const was = playing; stopAll(); cur = Math.max(0, Math.min(SEGS.length-1, i)); showSeg(cur); updateTime(0); if (was){ playing = true; runSeg(cur); } }
+function advance(my){ if (my !== token || !playing) return; setSpeaking(false); if (cur < SEGS.length - 1){ cur++; runSeg(cur); } else pause(); }
+
+function runSeg(i){
+  const my = ++token; const s = SEGS[i]; showSeg(i);
+  segStart = performance.now(); cancelAnimationFrame(rafId); rafId = requestAnimationFrame(tick);
+  if (s.type === 'oton'){
+    if (s.clip){
+      const v = $('otonVid'); v.currentTime = 0; v.playbackRate = 1;
+      v.onended = () => advance(my);
+      v.play().catch(() => setTimeout(() => advance(my), s.dur * 1000));
+    } else setTimeout(() => advance(my), s.dur * 1000);
+    return;
+  }
+  let k = 0;
+  const nextPart = () => {
+    if (my !== token) return;
+    if (k >= s.parts.length) return advance(my);
+    const p = s.parts[k++]; setCaption(p.t);
+    if (p.a){
+      narr.src = p.a.f; narr.playbackRate = rate();
+      narr.onended = nextPart; narr.onerror = nextPart;
+      narr.play().then(() => { if (my === token) setSpeaking(true); }).catch(nextPart);
+    } else if (synth){
+      const u = new SpeechSynthesisUtterance(speakable(p.t)); const fv = fallbackVoice();
+      if (fv){ u.voice = fv; u.lang = fv.lang; } else u.lang = 'de-DE';
+      u.rate = rate(); u.onstart = () => setSpeaking(true); u.onend = nextPart; u.onerror = nextPart; synth.speak(u);
+    } else setTimeout(nextPart, Math.max(1200, p.t.split(/\s+/).length / WPS * 1000 / rate()));
+  };
+  setSpeaking(true); nextPart();
+}
+
+/* ---------- Bedienung ---------- */
+$('bPlay').onclick = () => playing ? pause() : play();
+$('bNext').onclick = () => jump(cur + 1);
+$('bPrev').onclick = () => jump(cur - 1);
+$('rate').onchange = () => { buildUI(); showSeg(cur); };
+$('subs').onchange = () => { if (!$('subs').checked) $('caption').textContent = ''; else showSeg(cur); };
+document.addEventListener('keydown', e => {
+  if (e.target.closest && e.target.closest('textarea,select,input')) return;
+  if (e.code === 'Space'){ e.preventDefault(); playing ? pause() : play(); }
+  if (e.key === 'ArrowRight') jump(cur + 1);
+  if (e.key === 'ArrowLeft') jump(cur - 1);
+});
+$('bApply').onclick = () => {
+  const segs = prep(parse($('src').value));
+  if (!segs.length){ $('msg').textContent = 'Keine Abschnitte erkannt. Fehlen die Zeilen «▶ EINBLENDEN …»?'; return; }
+  pause(); SEGS = segs; cur = 0; buildUI(); showSeg(0);
+  const miss = segs.filter(s => s.type === 'oton' && !s.clip).length, nT = segs.reduce((t,s) => t + (s.missing || 0), 0);
+  $('msg').textContent = `${segs.length} Abschnitte übernommen` + (miss ? ` · ${miss} O-Ton ohne Clip` : '') + (nT ? ` · ${nT} Sätze mit Ersatzstimme` : '');
+  try { localStorage.setItem('drehfassung', $('src').value); localStorage.setItem('drehfassung_v','{{VERSION}}'); } catch(e){}
+};
+
+/* ---------- Start ---------- */
+let initial = $('drehfassung').textContent.trim();
+try { const saved = localStorage.getItem('drehfassung'); if (saved && localStorage.getItem('drehfassung_v') === '{{VERSION}}') initial = saved; } catch(e){}
+$('src').value = initial;
+SEGS = prep(parse(initial));
+buildUI(); showSeg(0);
+})();
+</script>

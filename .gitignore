@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*/audio/
+*/clips/
+*/stills/
+*/out/
+*/tts/*.onnx
+*/tts/*.onnx.json
+*/index.html
+.DS_Store
