@@ -1,0 +1,8 @@
+{
+  "name": "ai-video-toolkit",
+  "description": "From topic to rough cut: fact-checked script, study slides, video quotes, cut mockup, preview MP4, 1080p clips and a rights check.",
+  "version": "0.2.0",
+  "author": { "name": "plotti" },
+  "homepage": "https://github.com/plotti/ai-video-toolkit",
+  "license": "MIT"
+}

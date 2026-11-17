@@ -1,0 +1,12 @@
+{
+  "name": "ai-video-toolkit",
+  "description": "Plugins for evidence-based explainer videos",
+  "owner": { "name": "plotti" },
+  "plugins": [
+    {
+      "name": "ai-video-toolkit",
+      "source": "./plugins/ai-video-toolkit",
+      "description": "From topic to rough cut: fact-checked script, study slides, video quotes, cut mockup, preview MP4, 1080p clips and a rights check."
+    }
+  ]
+}
