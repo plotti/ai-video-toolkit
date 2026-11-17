@@ -26,6 +26,15 @@ def load_project(pdir):
     return cfg, clips, text
 
 
+def normalize_slides(cfg):
+    """pdftoppm nummeriert bei < 10 Seiten s-1.jpg statt s-01.jpg: auf zwei Stellen bringen."""
+    d = os.path.join(cfg['dir'], cfg['slides_dir'])
+    for f in os.listdir(d) if os.path.isdir(d) else []:
+        m = re.match(r'^s-(\d+)\.(jpe?g|png)$', f, re.I)
+        if m and len(m.group(1)) == 1:
+            os.rename(os.path.join(d, f), os.path.join(d, f's-{int(m.group(1)):02d}.jpg'))
+
+
 def sentences(t):
     return [s.strip() for s in SENT_RE.findall(t) if s.strip()]
 

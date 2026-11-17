@@ -7,7 +7,7 @@ Ergebnis: <projekt>/out/<titel>_Preview.mp4. Segmente werden zwischengespeichert
 """
 import json, os, re, subprocess, sys, textwrap
 from PIL import Image, ImageDraw, ImageFont
-from common import load_project, parse, sentences, clip_file
+from common import load_project, parse, normalize_slides, sentences, clip_file
 
 W, H = 1920, 1080
 NAVY, RED, WHITE, SKY = (15, 45, 92), (200, 16, 46), (255, 255, 255), (157, 178, 214)
@@ -67,6 +67,7 @@ def oton_overlay(c, no, path):
 
 def main(pdir, force=False):
     cfg, clips, text = load_project(pdir)
+    normalize_slides(cfg)
     audio = json.load(open(f"{cfg['dir']}/tts/manifest.json", encoding='utf-8'))
     out = f"{cfg['dir']}/out/seg"; os.makedirs(out, exist_ok=True)
     files = []

@@ -6,13 +6,14 @@ Schreibt <projekt>/index.html. Die Seite referenziert relativ: <slides_dir>/s-NN
 Für ein Artifact den ganzen Projektordner (ohne Rohmaterial) veröffentlichen.
 """
 import glob, hashlib, json, os, sys
-from common import load_project, parse
+from common import load_project, parse, normalize_slides
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 def main(pdir):
     cfg, clips, text = load_project(pdir)
+    normalize_slides(cfg)
     man_p = f"{cfg['dir']}/tts/manifest.json"
     audio = json.load(open(man_p, encoding='utf-8')) if os.path.exists(man_p) else {}
     nslides = len(glob.glob(f"{cfg['dir']}/{cfg['slides_dir']}/s-*.jpg"))
@@ -33,6 +34,7 @@ def main(pdir):
         '{{NSLIDES}}': str(max(nslides, 1)),
         '{{SLIDE_DIR}}': cfg['slides_dir'],
         '{{VERSION}}': version,
+        '{{VOICE}}': cfg['voice'],
     }
     for k, v in rep.items():
         t = t.replace(k, v)

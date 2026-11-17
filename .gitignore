@@ -8,3 +8,4 @@ __pycache__/
 */tts/*.onnx.json
 */index.html
 .DS_Store
+*/tts/manifest.json
